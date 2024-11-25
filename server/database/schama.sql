@@ -1,0 +1,57 @@
+CREATE DATABASE IF NOT EXISTS social_health_insurance_system;
+
+USE social_health_insurance_system;
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  national_id VARCHAR(20) NOT NULL UNIQUE,
+  biometric_data TEXT NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Claims table
+CREATE TABLE IF NOT EXISTS claims (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  claim_type VARCHAR(255) NOT NULL,
+  claim_amount DECIMAL(10, 2) NOT NULL,
+  description TEXT,
+  documents JSON,
+  status VARCHAR(50) DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Payments table
+CREATE TABLE IF NOT EXISTS payments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  phone_number VARCHAR(20) NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  account_reference VARCHAR(255) NOT NULL,
+  transaction_desc TEXT,
+  status VARCHAR(50) DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Reports table
+CREATE TABLE IF NOT EXISTS reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  claim_id INT,
+  payment_id INT,
+  report_type VARCHAR(255) NOT NULL,
+  report_data JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (claim_id) REFERENCES claims(id),
+  FOREIGN KEY (payment_id) REFERENCES payments(id)
+);
