@@ -1,69 +1,73 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './auth.css';
+import './Register.css';
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [nationalId, setNationalId] = useState('');
-  const [biometricData, setBiometricData] = useState(null);
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    nationalId: '',
+    email: '',
+    password: '',
+    phoneNumber: '',
+    subscriptionType: 'monthly',
+    biometricData: '', // Add biometric data field
+  });
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleFileChange = (e) => {
-    setBiometricData(e.target.files[0]);
+    setFormData({
+      ...formData,
+      biometricData: e.target.files[0], // Handle file input for biometric data
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('nationalId', nationalId);
-    formData.append('biometricData', biometricData);
-    formData.append('email', email);
-    formData.append('phoneNumber', phoneNumber);
-    formData.append('password', password);
-
-    // Validate the payload
-    if (!username || !nationalId || !biometricData || !email || !password || !phoneNumber) {
-      setError('All fields are required');
-      return;
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData, {
+      const response = await axios.post('http://localhost:5000/api/auth/register', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setMessage('User registered successfully');
+      setMessage(response.data.message);
       setError('');
-      // Redirect to the login page
       navigate('/login');
     } catch (err) {
-      console.error('Error registering user:', err);
-      setError('Error registering user');
+      setError(err.response?.data?.message || 'Error registering user');
+      setMessage('');
     }
   };
 
   return (
-    <div className="form-container">
-      <div className="register-form">
-        <h2>Register</h2>
-        {message && <p className="message">{message}</p>}
-        {error && <p className="error">{error}</p>}
-        <form onSubmit={handleSubmit}>
+    <div className="form-page-container">
+      <div className="form-container">
+        <form className="register-form" onSubmit={handleSubmit}>
+          <h2>Register</h2>
+          {error && <p className="error">{error}</p>}
+          {message && <p className="message">{message}</p>}
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
               required
             />
           </div>
@@ -72,17 +76,9 @@ const Register = () => {
             <input
               type="text"
               id="nationalId"
-              value={nationalId}
-              onChange={(e) => setNationalId(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="biometricData">Biometric Data</label>
-            <input
-              type="file"
-              id="biometricData"
-              onChange={handleFileChange}
+              name="nationalId"
+              value={formData.nationalId}
+              onChange={handleChange}
               required
             />
           </div>
@@ -91,18 +87,9 @@ const Register = () => {
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phoneNumber">Phone Number</label>
-            <input
-              type="text"
-              id="phoneNumber"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
           </div>
@@ -111,8 +98,43 @@ const Register = () => {
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phoneNumber">Phone Number</label>
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="subscriptionType">Subscription Type</label>
+            <select
+              id="subscriptionType"
+              name="subscriptionType"
+              value={formData.subscriptionType}
+              onChange={handleChange}
+              required
+            >
+              <option value="monthly">Monthly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="biometricData">Biometric Data</label>
+            <input
+              type="file"
+              id="biometricData"
+              name="biometricData"
+              onChange={handleFileChange}
               required
             />
           </div>

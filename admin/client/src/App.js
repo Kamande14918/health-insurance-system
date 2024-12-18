@@ -5,6 +5,9 @@ import AdminDashboard from './components/AdminDashboard';
 import AdminRegister from './components/AdminRegister';
 import AdminLogin from './components/AdminLogin';
 import AdminHome from './components/AdminHome';
+import Reports from './components/reports/Reports';
+
+
 
 function App() {
   return (
@@ -15,6 +18,9 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/reports" element={<Reports />} />
+          
+        
         </Routes>
       </div>
     </Router>

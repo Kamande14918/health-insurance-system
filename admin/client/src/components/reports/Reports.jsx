@@ -5,11 +5,15 @@ import './reports.css';
 const Reports = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [nationalId, setNationalId] = useState('');
+  const [userId, setUserId] = useState('');
   const [error, setError] = useState('');
 
   const generateReport = (format) => {
-    axios.get(`http://localhost:5000/api/reports?startDate=${startDate}&endDate=${endDate}&nationalId=${nationalId}&format=${format}`, {
+    const token = localStorage.getItem('adminToken'); // Get the token from local storage
+    axios.get(`http://localhost:5002/api/reports/generate?startDate=${startDate}&endDate=${endDate}&userId=${userId}&format=${format}`, {
+      headers: {
+        'Authorization': `Bearer ${token}` // Include the token in the request headers
+      },
       responseType: 'blob' // Important for handling binary data
     })
       .then(response => {
@@ -50,12 +54,12 @@ const Reports = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="nationalId">National ID</label>
+          <label htmlFor="userId">User ID</label>
           <input
             type="text"
-            id="nationalId"
-            value={nationalId}
-            onChange={(e) => setNationalId(e.target.value)}
+            id="userId"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
           />
         </div>
         <button type="submit">Generate PDF Report</button>

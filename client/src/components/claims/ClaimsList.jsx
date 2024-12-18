@@ -39,17 +39,28 @@ const ClaimsList = () => {
       {claims.length === 0 ? (
         <p>No claims found.</p>
       ) : (
-        <ul>
-          {claims.map((claim) => (
-            <li key={claim.id}>
-              <p>Type: {claim.claim_type}</p>
-              <p>Amount: {claim.claim_amount}</p>
-              <p>Description: {claim.description}</p>
-              <p>Status: {claim.status}</p>
-              <p>Created At: {new Date(claim.created_at).toLocaleString()}</p>
-            </li>
-          ))}
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {claims.map((claim) => (
+              <tr key={claim.id}>
+                <td>{claim.claim_type}</td>
+                <td>{claim.claim_amount}</td>
+                <td>{claim.description}</td>
+                <td>{claim.status}</td>
+                <td>{new Date(claim.created_at).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

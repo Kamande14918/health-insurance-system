@@ -1,25 +1,19 @@
 import express from 'express';
-import { getUsers, getClaims, updateClaimStatus, generateReport } from '../controllers/adminControllers.js';
+import { getUsersWithClaimsAndPayments, updateClaimStatus, generateReport } from '../controllers/adminControllers.js';
 import { registerAdmin, loginAdmin } from '../controllers/authController.js';
 import adminMiddleware from '../middleware/adminMiddleware.js';
 
+
 const router = express.Router();
 
-// Admin authentication routes
 router.post('/register', registerAdmin);
 router.post('/login', loginAdmin);
 
-// Admin functionalities routes
-router.use(adminMiddleware); // Protect routes below this line
+// Protect routes below this line
+router.use(adminMiddleware);
 
-// Users management
-router.get('/users', getUsers);
-
-// Claims management
-router.get('/claims', getClaims);
-router.put('/claims/:id', updateClaimStatus);
-
-// Reports generation
+router.put('/claims/status/:id', updateClaimStatus);
 router.get('/reports', generateReport);
+router.get('/users-with-claims-and-payments', getUsersWithClaimsAndPayments);
 
 export default router;

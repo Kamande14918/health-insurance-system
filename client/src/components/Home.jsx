@@ -4,7 +4,7 @@ import './Home.css'; // Import CSS for styling
 const Home = () => {
   return (
     <div className="home-container">
-      <header className="home-header">
+      <header className="home-header">una
         <h1>Social Health Authority</h1>
         <p>Ensuring a healthier, more equitable future for all through comprehensive coverage and quality care without financial worry.</p>
       </header>

@@ -1,42 +1,47 @@
 import express from 'express';
-import multer from 'multer';
 import { db } from '../config/database.js';
-import authMiddleware from '../middleware/auth.js';
+import multer from 'multer';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
-const upload = multer();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Submit a new claim
-router.post('/', authMiddleware, upload.array('documents'), (req, res) => {
+router.post('/submit-claim', authMiddleware, upload.single('documents'), async (req, res) => {
   const { claimType, claimAmount, description } = req.body;
-  const documents = req.files || [];
+  const documents = req.file;
   const userId = req.user.id;
-  const nationalId = req.user.national_id;
-
-  console.log('User ID:', userId);
-  console.log('National ID:', nationalId);
 
   if (!claimType || !claimAmount || !description) {
-    console.error('Validation error: All fields are required');
     return res.status(400).send('All fields are required');
   }
 
-  if (!nationalId) {
-    console.error('Validation error: National ID is required');
-    return res.status(400).send('National ID is required');
-  }
+  try {
+    // Fetch national_id from users table
+    const userQuery = 'SELECT national_id FROM users WHERE id = ?';
+    db.query(userQuery, [userId], (err, userResults) => {
+      if (err || userResults.length === 0) {
+        console.error('User not found:', err);
+        return res.status(404).send('User not found');
+      }
 
-  const documentPaths = documents.map(file => file.path);
-  const query = 'INSERT INTO claims (user_id, national_id, claim_type, claim_amount, description, documents) VALUES (?, ?, ?, ?, ?, ?)';
-  db.query(query, [userId, nationalId, claimType, claimAmount, description, JSON.stringify(documentPaths)], (err, results) => {
-    if (err) {
-      console.error('Database query error:', err);
-      return res.status(500).send('Database query error');
-    } else {
-      console.log('Claim submitted successfully:', results);
-      return res.status(201).send('Claim submitted successfully');
-    }
-  });
+      const nationalId = userResults[0].national_id;
+
+      // Insert claim into claims table
+      const claimQuery = 'INSERT INTO claims (user_id, claim_type, claim_amount, description, documents) VALUES (?, ?, ?, ?, ?)';
+      db.query(claimQuery, [userId, claimType, claimAmount, description, documents ? documents.buffer : null], (err, claimResults) => {
+        if (err) {
+          console.error('Database query error:', err);
+          return res.status(500).send('Database query error');
+        }
+        res.status(201).send('Claim submitted successfully');
+      });
+    });
+  } catch (error) {
+    console.error('Error submitting claim:', error);
+    res.status(500).send('Error submitting claim');
+  }
 });
 
 // Get all claims for a user

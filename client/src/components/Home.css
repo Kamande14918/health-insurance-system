@@ -1,63 +1,122 @@
-.home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
+/* General Layout */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: linear-gradient(to right, #e0eafc, #cfdef3);
+  color: #2c3e50;
 }
 
+/* Navigation Bar */
+.home-nav {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-button {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #007bff;
+  font-size: 0.9rem;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.nav-button + .nav-button {
+  margin-left: 30px; /* Adds extra spacing between buttons */
+}
+
+.nav-button:hover {
+  background: #007bff;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Header Section */
 .home-header {
+  text-align: center;
+  padding: 60px 20px;
   margin-bottom: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .home-header h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
+  color: #007bff;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
 .home-header p {
-  font-size: 1.2em;
-  color: #666;
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.8;
 }
 
+/* Content Section */
 .home-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
 .home-card {
-  background-color:grey;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 15px;
   padding: 20px;
-  margin: 10px;
-  width: 60%;
-  box-shadow: 0 2px 4px rgba(39, 189, 25, 0.116);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.home-card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px);
 }
 
 .home-card h2 {
-  font-size: 1.5em;
+  color: #007bff;
+  font-size: 1.6rem;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
 .home-card p {
-  font-size: 1em;
-  color: whitesmoke;
-  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.8;
 }
 
+/* Button Styles */
 .home-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 40px;
-  margin: 20px 10px;
-  background-color: #4CAF50;
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 30px;
   color: white;
+  background-color: #28a745;
   text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  border-radius: 25px;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .home-button:hover {
-  background-color: #45a049;
+  background-color: #218838;
+  box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4);
+  transform: translateY(-4px);
 }

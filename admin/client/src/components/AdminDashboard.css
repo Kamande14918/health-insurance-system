@@ -1,0 +1,72 @@
+.admin-dashboard {
+  padding: 20px;
+}
+
+.admin-dashboard h2 {
+  margin-bottom: 20px;
+}
+
+.error {
+  color: red;
+  margin-bottom: 20px;
+}
+
+.user-section {
+  margin-bottom: 40px;
+}
+
+.user-section h3 {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+li p {
+  margin: 5px 0;
+}
+
+li ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+li ul li {
+  background-color: #fff;
+  border: none;
+  padding: 5px 0;
+}
+
+li ul li p {
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+select {
+  padding: 5px;
+}

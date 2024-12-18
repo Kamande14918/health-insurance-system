@@ -1,18 +1,23 @@
 // admin/server/server.js
+import dotenv from 'dotenv';
 import express from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
+import cors from 'cors'; // Import cors
 import adminRoutes from './routes/adminRoutes.js';
+import reportsRoutes from './routes/reportsRoutes.js'; // Import reports routes
+import authRoutes from './routes/authRoutes.js'; // Assuming you have auth routes
+
+dotenv.config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const PORT = process.env.PORT || 5002;
 
-// Use the admin routes
+app.use(cors()); // Enable CORS
+app.use(bodyParser.json());
 app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportsRoutes); // Use reports routes
+app.use('/api/auth', authRoutes); // Assuming you have auth routes
 
-const PORT = process.env.ADMIN_PORT || 6000;
 app.listen(PORT, () => {
-  console.log(`Admin server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

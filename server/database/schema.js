@@ -4,7 +4,7 @@ const dbConfig = {
   host: 'localhost',
   user: 'root',
   password: 'Ken@14918',
-  database: 'social_health_insurance_system'
+  database: 'health_insurance_system'
 };
 
 const connection = mysql.createConnection(dbConfig);

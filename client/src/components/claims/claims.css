@@ -1,43 +1,170 @@
 /* Centered form styles */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background: linear-gradient(to right, #f4f4f4, #ffffff);
+  color: #333;
+}
+
 .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding-top: 60px; /* Adjust for fixed navbar height */
+  background: #f8f9fa;
+  padding: 20px;
+}
+
+.form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2c3e50;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #dfe4ea;
+  border-radius: 6px;
+  background: #f9f9f9;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+  outline: none;
 }
 
 button {
   width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
   color: white;
+  background: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 button:hover {
-  background-color: #45a049;
+  background: #0056b3;
+  box-shadow: 0 6px 20px rgba(0, 91, 187, 0.3);
+  transform: translateY(-3px);
 }
 
 .message, .error {
-  color: red;
-  margin-bottom: 15px;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.message {
+  background-color: #eafaf1;
+  color: #28a745;
+}
+
+.error {
+  background-color: #fdecea;
+  color: #e74c3c;
+}
+
+/* Modern table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+table, th, td {
+  border: none;
+}
+
+th {
+  background: #007bff;
+  color: white;
+  text-align: left;
+  padding: 15px;
+  font-weight: 600;
+}
+
+td {
+  padding: 15px;
+  text-align: left;
+  color: #555;
+  border-bottom: 1px solid #eaeaea;
+}
+
+tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+tr:hover {
+  background: #f1f5fc;
+  transition: background 0.3s ease;
+}
+
+/* Dashboard container */
+.dashboard-container {
+  padding: 40px;
+  background: #f4f5f7;
+}
+
+.dashboard-section {
+  margin-bottom: 40px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h3 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Claims list */
+.claims-list {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.claims-list h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #007bff;
+  text-align: center;
 }

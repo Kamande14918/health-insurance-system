@@ -9,6 +9,7 @@
     "axios": "^1.7.7",
     "chart.js": "^4.4.6",
     "client": "file:",
+    "cross-env": "^7.0.3",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "react": "^18.3.1",
@@ -19,12 +20,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": " cross-env PORT=3002 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:6000",
+  "proxy": "http://localhost:5002",
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const AdminHome = () => {
   return (
     <div>
-      <h2>Welcome to Admin Portal</h2>
+      <h2>Welcome to the health insurance admin portal</h2>
       <div>
         <Link to="/admin/register">
           <button>Register as an Admin</button>

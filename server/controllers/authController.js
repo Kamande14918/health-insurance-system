@@ -1,53 +1,69 @@
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import db from '../database/schema'; // Adjust the path as necessary
+import jwt from 'jsonwebtoken';
+import { db } from '../config/database.js';
 
-export const register = async (req, res) => {
-  const { username, password } = req.body;
+export const registerUser = async (req, res) => {
+  const { username, nationalId, email, password, phoneNumber, subscriptionType } = req.body;
 
   try {
-    // Hash the password before saving it to the database
     const hashedPassword = await bcrypt.hash(password, 10);
+    const [userResult] = await db.query(
+      'INSERT INTO users (username, national_id, email, password, phone_number) VALUES (?, ?, ?, ?, ?)',
+      [username, nationalId, email, hashedPassword, phoneNumber]
+    );
 
-    // Insert the new user into the database
-    db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword], (err, results) => {
-      if (err) {
-        console.error('Database query error:', err);
-        return res.status(500).send('Database query error');
-      }
-      res.status(201).send('User registered successfully');
-    });
-  } catch (error) {
-    console.error('Error registering user:', error);
-    res.status(500).send('Error registering user');
+    const userId = userResult.insertId;
+    const startDate = new Date();
+    const endDate = subscriptionType === 'monthly' ? new Date(startDate.setMonth(startDate.getMonth() + 1)) : new Date(startDate.setFullYear(startDate.getFullYear() + 1));
+
+    await db.query(
+      'INSERT INTO subscriptions (user_id, subscription_type, start_date, end_date) VALUES (?, ?, ?, ?)',
+      [userId, subscriptionType, new Date(), endDate]
+    );
+
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    console.error('Error registering user:', err);
+    res.status(500).json({ message: 'Error registering user' });
   }
 };
 
-export const login = (req, res) => {
-  const { username, password } = req.body;
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
 
-  // Query the database for the user
-  db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
-    if (err) {
-      console.error('Database query error:', err);
-      return res.status(500).send('Database query error');
+  try {
+    const [userResult] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (userResult.length === 0) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    if (results.length === 0) {
-      return res.status(400).send('Invalid username or password');
+    const user = userResult[0];
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const user = results[0];
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token, user_id: user.id }); // Include user_id in the response
+  } catch (err) {
+    console.error('Error logging in user:', err);
+    res.status(500).json({ message: 'Error logging in user' });
+  }
+};
 
-    // Compare the provided password with the hashed password in the database
-    const validPassword = await bcrypt.compare(password, user.password);
+export const getUserId = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: "Authorization header missing. Please log in again." });
+  }
+  const token = authHeader.split(' ')[1];
 
-    if (!validPassword) {
-      return res.status(400).send('Invalid username or password');
-    }
-
-    // Generate a JWT token
-    const token = jwt.sign({ id: user.id, username: user.username }, 'your_jwt_secret_key', { expiresIn: '1h' });
-    res.send({ token });
-  });
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.id;
+    res.status(200).json({ user_id: userId });
+  } catch (err) {
+    console.error('Token verification error:', err);
+    res.status(401).json({ error: "Invalid token. Please log in again." });
+  }
 };

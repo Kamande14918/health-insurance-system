@@ -1,85 +1,57 @@
-import { useState, useEffect, useCallback } from 'react';
+import  { useState } from 'react';
 import axios from 'axios';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import './reports.css';
 
 const Reports = () => {
-  const [reports, setReports] = useState([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [userId, setUserId] = useState('');
   const [error, setError] = useState('');
+  const [reports, setReports] = useState([]);
 
-  const fetchReports = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/reports', {
-        params: { startDate, endDate, userId },
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+  const generateReport = (format) => {
+    const token = localStorage.getItem('adminToken'); // Get the token from local storage
+    axios.get(`http://localhost:5002/api/reports/generate?startDate=${startDate}&endDate=${endDate}&userId=${userId}&format=${format}`, {
+      headers: {
+        'Authorization': `Bearer ${token}` // Include the token in the request headers
+      },
+      responseType: 'blob' // Important for handling binary data
+    })
+      .then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `user_report.${format}`);
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch(error => {
+        console.error('Error generating report:', error);
+        setError('Error generating report');
       });
-      setReports(response.data);
-    } catch (err) {
-      console.error('Error fetching reports:', err);
-      setError('Error fetching reports');
-    }
-  }, [startDate, endDate, userId]);
-
-  useEffect(() => {
-    fetchReports();
-  }, [fetchReports]);
-
-  const handleFilterSubmit = (e) => {
-    e.preventDefault();
-    fetchReports();
   };
 
-  const downloadCSV = () => {
-    const csvRows = [
-      ['ID', 'User ID', 'Claim Type', 'Claim Amount', 'Status', 'Created At'],
-      ...reports.map(report => [
-        report.id,
-        report.user_id,
-        report.claim_type,
-        report.claim_amount,
-        report.status,
-        report.created_at,
-      ]),
-    ];
-
-    const csvContent = csvRows.map(e => e.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', 'reports.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    doc.autoTable({
-      head: [['ID', 'User ID', 'Claim Type', 'Claim Amount', 'Status', 'Created At']],
-      body: reports.map(report => [
-        report.id,
-        report.user_id,
-        report.claim_type,
-        report.claim_amount,
-        report.status,
-        report.created_at,
-      ]),
-    });
-    doc.save('reports.pdf');
+  const fetchReports = () => {
+    const token = localStorage.getItem('adminToken'); // Get the token from local storage
+    axios.get(`http://localhost:5002/api/reports/generate?startDate=${startDate}&endDate=${endDate}&userId=${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}` // Include the token in the request headers
+      }
+    })
+      .then(response => {
+        setReports(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching reports:', error);
+        setError('Error fetching reports');
+      });
   };
 
   return (
     <div className="reports-container">
       <h2>Reports</h2>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={handleFilterSubmit}>
+      <form onSubmit={(e) => { e.preventDefault(); fetchReports(); }}>
         <div className="form-group">
           <label htmlFor="startDate">Start Date</label>
           <input
@@ -111,28 +83,28 @@ const Reports = () => {
       </form>
       {reports.length > 0 && (
         <>
-          <button onClick={downloadCSV}>Download CSV</button>
-          <button onClick={downloadPDF}>Download PDF</button>
+          <button onClick={() => generateReport('csv')}>Download CSV</button>
+          <button onClick={() => generateReport('pdf')}>Download PDF</button>
           <table>
             <thead>
               <tr>
                 <th>ID</th>
-                <th>User ID</th>
                 <th>Claim Type</th>
                 <th>Claim Amount</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Created At</th>
               </tr>
             </thead>
             <tbody>
               {reports.map((report) => (
-                <tr key={report.id}>
-                  <td>{report.id}</td>
-                  <td>{report.user_id}</td>
+                <tr key={report.claim_id}>
+                  <td>{report.claim_id}</td>
                   <td>{report.claim_type}</td>
                   <td>{report.claim_amount}</td>
+                  <td>{report.description}</td>
                   <td>{report.status}</td>
-                  <td>{report.created_at}</td>
+                  <td>{new Date(report.created_at).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

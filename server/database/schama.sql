@@ -1,57 +1,82 @@
-CREATE DATABASE IF NOT EXISTS social_health_insurance_system;
+CREATE DATABASE IF NOT EXISTS health_insurance;
 
-USE social_health_insurance_system;
+USE health_insurance;
 
--- Users table
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    national_id VARCHAR(20),
+    biometric_data LONGBLOB,
+    email VARCHAR(255),
+    password VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    phone_number VARCHAR(25)
+);
+
+
+-- Profile TABLE
+CREATE TABLE profiles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    phone_number VARCHAR(25),
+    address VARCHAR(255),
+    date_of_birth DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE claims (
+    id INT PRIMARY KEY,
+    user_id INT,
+    claim_type VARCHAR(255),
+    claim_amount DECIMAL(10, 2),
+    description TEXT,
+    documents LONGBLOB,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE payments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    phone VARCHAR(25),
+    amount DECIMAL(10, 2),
+    status ENUM('pending', 'cancelled', 'paid') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE reports (
+    id INT PRIMARY KEY,
+    claim_id INT,
+    report_name VARCHAR(255),
+    report_desc JSON,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    FOREIGN KEY (claim_id) REFERENCES claims(id)
+);
+
+--Creating the admin table 
+CREATE TABLE IF NOT EXISTS admins (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  national_id VARCHAR(20) NOT NULL UNIQUE,
-  biometric_data TEXT NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Claims table
-CREATE TABLE IF NOT EXISTS claims (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  claim_type VARCHAR(255) NOT NULL,
-  claim_amount DECIMAL(10, 2) NOT NULL,
-  description TEXT,
-  documents JSON,
-  status VARCHAR(50) DEFAULT 'Pending',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+-- subscriptions table 
+CREATE TABLE subscriptions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    subscription_type VARCHAR(255),
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
--- Payments table
-CREATE TABLE IF NOT EXISTS payments (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  phone_number VARCHAR(20) NOT NULL,
-  amount DECIMAL(10, 2) NOT NULL,
-  account_reference VARCHAR(255) NOT NULL,
-  transaction_desc TEXT,
-  status VARCHAR(50) DEFAULT 'Pending',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
--- Reports table
-CREATE TABLE IF NOT EXISTS reports (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  claim_id INT,
-  payment_id INT,
-  report_type VARCHAR(255) NOT NULL,
-  report_data JSON,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (claim_id) REFERENCES claims(id),
-  FOREIGN KEY (payment_id) REFERENCES payments(id)
-);
+-- Creating the admin table
+C

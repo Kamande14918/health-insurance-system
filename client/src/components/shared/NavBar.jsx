@@ -1,7 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './navbar.css';
 
 const Navbar = () => {
+  const location = useLocation();
+
+  // Check if the current path is the homepage route
+  const isHomepage = location.pathname === '/';
+
+  // If it's the homepage, return null to exclude the Navbar
+  if (isHomepage) {
+    return null;
+  }
+
   return (
     <nav className="navbar">
       <ul>
@@ -9,13 +19,8 @@ const Navbar = () => {
         <li><Link to="/make-payment">Make Payment</Link></li>
         <li><Link to="/claim-history">Claim History</Link></li>
         <li><Link to="/payment-history">Payment History</Link></li>
-        <li><Link to="/reports">Reports</Link></li>
+        {/* <li><Link to="/reports">Reports</Link></li> */}
       </ul>
-      {/* <div className="profile-icon"> */}
-        {/* <Link to="/profile"> */}
-          {/* <img src="/path/to/profile-icon.png" alt="Profile" /> */}
-        {/* </Link> */}
-      {/* </div> */}
     </nav>
   );
 };

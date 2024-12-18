@@ -1,9 +1,10 @@
-import express from 'express';
-import multer from 'multer';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { db } from '../config/database.js';
 import generateToken from '../utils/tokenGenerator.js';
+import express from 'express';
+import multer from 'multer';
+import { getUserId } from '../controllers/authController.js';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -14,7 +15,7 @@ router.post('/register', upload.single('biometricData'), async (req, res) => {
   const { username, nationalId, email, password, phoneNumber } = req.body;
   const biometricData = req.file;
 
-  if (!nationalId || !biometricData || !email || !password || !phoneNumber) {
+  if (!username || !nationalId || !biometricData || !email || !password || !phoneNumber) {
     return res.status(400).send('All fields are required');
   }
 
@@ -38,6 +39,10 @@ router.post('/register', upload.single('biometricData'), async (req, res) => {
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).send('Email and password are required');
+  }
+
   // Fetch user details from the database
   const query = 'SELECT id, password FROM users WHERE email = ?';
   db.query(query, [email], async (err, results) => {
@@ -48,14 +53,12 @@ router.post('/login', (req, res) => {
 
     const user = results[0];
     const validPassword = await bcrypt.compare(password, user.password);
-
     if (!validPassword) {
       return res.status(401).send('Invalid email or password.');
     }
 
-    // Generate JWT token
-    const token = generateToken(user.id);
-    res.send({ token });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ token });
   });
 });
 
@@ -148,5 +151,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
     res.status(500).send('Error updating profile');
   }
 });
+
+router.get('/user-id', getUserId);
 
 export default router;

@@ -1,26 +1,68 @@
+/* Navbar container */
 .navbar {
-  background-color: #333;
+  background: linear-gradient(to right, #0066cc, #003366); /* Modern gradient effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   overflow: hidden;
+  padding: 0 20px; /* Padding for spacing */
+  font-family: 'Arial', sans-serif; /* Modern font style */
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0; /* Ensure it covers from left to right */
+  z-index: 1000;
+  width: 100%; /* Full width of the page */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
+/* Navbar list */
 .navbar ul {
-  list-style-type: none;
+  list-style: none;
   margin: 0;
   padding: 0;
+  display: flex; /* Flexbox for alignment */
+  justify-content: space-between; /* Space items from left to right */
+  align-items: center;
+  width: 100%; /* Ensure the list takes up the full width */
 }
 
+/* Navbar list items */
 .navbar li {
-  float: left;
+  margin: 0 15px; /* Adjusted margin for better spacing */
 }
 
+/* Navbar links */
 .navbar li a {
-  display: block;
-  color: white;
+  display: inline-block;
+  color: #fff; /* White text */
   text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+  padding: 12px 20px; /* Comfortable padding */
+  text-decoration: none; /* Remove underline */
+  border-radius: 20px; /* Rounded corners for modern look */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  font-size: 16px; /* Slightly larger font */
 }
 
+/* Hover effect */
 .navbar li a:hover {
-  background-color: #111;
+  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent hover background */
+  color: #ffcc00; /* Add a vibrant hover text color */
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align to the left */
+  }
+
+  .navbar li {
+    margin: 5px 0; /* Adjust spacing for stacked items */
+  }
+
+  .navbar li a {
+    width: 100%; /* Full width for mobile */
+    text-align: left; /* Left-align text */
+    padding: 12px 20px; /* Ensure padding is consistent */
+  }
 }

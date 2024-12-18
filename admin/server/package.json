@@ -9,6 +9,7 @@
     "array-flatten": "^1.1.1",
     "available-typed-arrays": "^1.0.7",
     "base64-js": "^1.5.1",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^9.0.0",
     "body-parser": "^1.20.3",
@@ -33,7 +34,7 @@
     "depd": "^2.0.0",
     "destroy": "^1.2.0",
     "dfa": "^1.2.0",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "ecdsa-sig-formatter": "^1.0.11",
     "ee-first": "^1.1.1",
     "encodeurl": "^2.0.0",
@@ -80,6 +81,7 @@
     "is-weakset": "^2.0.3",
     "isarray": "^2.0.5",
     "jpeg-exif": "^1.1.4",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "jwa": "^1.4.1",
     "jws": "^3.2.2",
@@ -99,7 +101,10 @@
     "mime-types": "^2.1.35",
     "ms": "^2.0.0",
     "mysql": "^2.18.1",
+    "mysql2": "^3.11.5",
     "negotiator": "^0.6.3",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.16",
     "object-assign": "^4.1.1",
     "object-inspect": "^1.13.3",
     "object-is": "^1.1.6",
@@ -156,6 +161,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.1.7"
   }
 }
