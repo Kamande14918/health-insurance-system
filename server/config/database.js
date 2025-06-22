@@ -5,9 +5,9 @@ dotenv.config();
 
 const dbConfig = {
   host: 'localhost',
-  user: 'root',
-  password: 'Ken@14918',
-  database: 'health_insurance_system',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   charset: 'utf8mb4', // Ensure the correct encoding is set
 };
 

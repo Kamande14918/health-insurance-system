@@ -1,10 +1,11 @@
 const mysql = require('mysql2');
+require('dotenv').config();
 
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: 'Ken@14918',
-  database: 'health_insurance_system'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 };
 
 const connection = mysql.createConnection(dbConfig);
@@ -16,5 +17,8 @@ connection.connect((err) => {
   }
   console.log('Connected to the database as id ' + connection.threadId);
 });
+
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 
 module.exports = connection;
